@@ -4,7 +4,7 @@
   "description": "Serverless Lambda function for project: billboard-tv-serverless2",
   "customName": false,
   "customRole": false,
-  "handler": "handler.handler",
+  "handler": "scrape/handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},
@@ -14,10 +14,10 @@
   "endpoints": [],
   "events": [
     {
-      "name": "mySchedule",
+      "name": "every saturday",
       "type": "schedule",
       "config": {
-        "schedule": "rate(5 minutes)"
+        "schedule": "cron(0 0 ? * SAT *)"
       }
     }
   ],

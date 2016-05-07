@@ -1,15 +1,15 @@
 {
-  "name": "scrape",
+  "name": "billboard-tv",
   "version": "1.0.0",
   "description": "",
-  "main": "handler.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.3.6",
+    "aws-sdk": "^2.3.9",
     "cheerio-httpcli": "^0.6.8",
     "youtube-node": "^1.3.0"
   }

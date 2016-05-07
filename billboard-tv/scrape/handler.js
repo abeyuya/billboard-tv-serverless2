@@ -1,23 +1,10 @@
 'use strict';
 
-var AWS = require('aws-sdk');
-var s3_client = (() => {
-  AWS.config.update({
-    'accessKeyId': process.env.BILLBOARD_TV_AWS_ACCESS_KEY_ID,
-    'secretAccessKey': process.env.BILLBOARD_TV_AWS_SECRET_ACCESS_KEY,
-    'region': process.env.BILLBOARD_TV_AWS_REGION
-  });
-  return new AWS.S3();
-})();
+var Aws = require('../model/aws.js');
+var s3_client = Aws.s3();
 
-var Youtube = require('youtube-node');
-var youtube_client = (() => {
-  var youtube_client = new Youtube();
-  youtube_client.setKey(process.env.YOUTUBE_API_KEY);
-  youtube_client.addParam('order', 'relevance');
-  youtube_client.addParam('type', 'video');
-  return youtube_client;
-})();
+var Youtube = require('../model/youtube.js');
+var youtube_client = Youtube.client();
 
 var cheerio_httpclient = require('cheerio-httpcli');
 
