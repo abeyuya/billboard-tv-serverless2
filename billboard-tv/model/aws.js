@@ -4,7 +4,7 @@ var AWS = require('aws-sdk');
 AWS.config.update({
   'accessKeyId': process.env.BILLBOARD_TV_AWS_ACCESS_KEY_ID,
   'secretAccessKey': process.env.BILLBOARD_TV_AWS_SECRET_ACCESS_KEY,
-  'region': process.env.BILLBOARD_TV_AWS_REGION
+  'region': process.env.SERVERLESS_REGION
 });
 
 module.exports = class Aws {

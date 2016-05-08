@@ -4,8 +4,8 @@
   "description": "Serverless Lambda function for project: billboard-tv-serverless2",
   "customName": false,
   "customRole": false,
-  "handler": "handler.handler",
-  "timeout": 6,
+  "handler": "youtube/handler.handler",
+  "timeout": 300,
   "memorySize": 1024,
   "authorizer": {},
   "custom": {
@@ -25,7 +25,15 @@
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",
-    "SERVERLESS_REGION": "${region}"
+    "SERVERLESS_REGION": "${region}",
+    "BILLBOARD_TV_AWS_ACCESS_KEY_ID": "${BILLBOARD_TV_AWS_ACCESS_KEY_ID}",
+    "BILLBOARD_TV_AWS_SECRET_ACCESS_KEY": "${BILLBOARD_TV_AWS_SECRET_ACCESS_KEY}",
+    "YOUTUBE_API_KEY": "${YOUTUBE_API_KEY}",
+    "GOOGLE_API_CLIENT_ID": "${GOOGLE_API_CLIENT_ID}",
+    "GOOGLE_API_CLIENT_SECRET": "${GOOGLE_API_CLIENT_SECRET}",
+    "GOOGLE_API_REDIRECT_URL": "${GOOGLE_API_REDIRECT_URL}",
+    "GOOGLE_API_ACCESS_TOKEN": "${GOOGLE_API_ACCESS_TOKEN}",
+    "GOOGLE_API_REFRESH_TOKEN": "${GOOGLE_API_REFRESH_TOKEN}"
   },
   "vpc": {
     "securityGroupIds": [],
