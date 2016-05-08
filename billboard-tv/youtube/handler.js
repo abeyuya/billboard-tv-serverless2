@@ -10,7 +10,7 @@ function serialVideoInsert(ranking_json, youtube_client, playlist_id, loop_count
     if (err) throw new Error(err);
     
     console.log('loop_count', loop_count);
-    if (loop_count == 99) {
+    if (loop_count === ranking_json.ranking.length - 1) {
       callback();
     } else {
       serialVideoInsert(ranking_json, youtube_client, playlist_id, loop_count+1, callback);
