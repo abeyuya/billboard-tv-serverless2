@@ -1,14 +1,5 @@
 'use strict';
 
-var Youtube = require('youtube-node');
-var youtube_client = (() => {
-  var youtube_client = new Youtube();
-  youtube_client.setKey(process.env.YOUTUBE_API_KEY);
-  youtube_client.addParam('order', 'relevance');
-  youtube_client.addParam('type', 'video');
-  return youtube_client;
-})();
-
 var Google = require('googleapis');
 var youtube_client = Google.youtube('v3');
 
@@ -35,6 +26,25 @@ module.exports = class Youtube {
     });
   }
   
+  search(keyword, callback){
+    var param = {
+      auth: oauth2Client,
+      part: 'snippet',
+      maxResults: 1,
+      q: keyword,
+      type: 'video',
+      videoEmbeddable: 'true',
+      order: 'relevance'
+    };
+    
+    youtube_client.search.list(param, (err, res) => {
+      if (err) return callback(err);
+      if (res.items.length === 0) return callback(null, '');
+      
+      callback(null, res.items[0]['id']['videoId']);
+    });
+  }
+  
   insertPlaylist(title, callback){
     var param = {
       auth: oauth2Client,
@@ -53,7 +63,7 @@ module.exports = class Youtube {
     youtube_client.playlists.insert(param, (err, res) => {
       callback(err, res['id']);
     });
-  };
+  }
   
   insertVideo(playlist_id, video_id, callback){
     var param = {
