@@ -94,16 +94,16 @@ module.exports = class Youtube {
       fields: 'items(id,snippet)'
     };
     
-    youtube_client.playlists.list(param, (err, playlists_res) => {
+    youtube_client.playlists.list(param, (err, res) => {
       if (err) return callback(err);
-      if (playlists_res.items.length === 0) return callback(null, false);
+      if (res.items.length === 0) return callback(null, false);
       
-      for (var i = 0; i < playlists_res.items.length; i++) {
-        if (playlists_res.items[i]['snippet']['title'] === playlist_title) {
+      for (var i = 0; i < res.items.length; i++) {
+        if (res.items[i]['snippet']['title'] === playlist_title) {
           return callback(null, true);
         }
         
-        if (i === playlists_res.items.length - 1) return callback(null, false);
+        if (i === res.items.length - 1) return callback(null, false);
       }
     });
   }

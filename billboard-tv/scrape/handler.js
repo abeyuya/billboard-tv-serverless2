@@ -10,19 +10,7 @@ function splitter(string){
   return string.replace(/\t/g , '').replace(/\n/g, '').trim();
 };
 
-function build_s3_param(json){
-  var body = JSON.stringify(json);
-  var params = {
-    'Bucket': 'billboard-tv.tk',
-    'Key': 'ranking.json',
-    'ACL': 'public-read',
-    'Body': body,
-    ContentType: 'application/json',
-  };
-  return params;
-};
-
-function parse_dom($, obj){
+function parseDom($, obj){
   var title  = splitter($(obj).find('.chart-row__song').text());
   var artist = splitter($(obj).find('.chart-row__artist').text());
   var rank   = splitter($(obj).find('.chart-row__current-week').text());
@@ -35,28 +23,33 @@ function parse_dom($, obj){
     artist: artist,
     rank: rank
   };
-}
+};
 
-function serialFetchVideoInfo(record, loop_count){
-  // var record = parse_dom($, ranking_dom[loop_count]);
+function serialVideoIDSearch(youtube_client, $, ranking_dom, loop_count, ranking_array, callback){
+  var record = parseDom($, ranking_dom[loop_count]);
   youtube_client.search(record.artist + ' ' + record.title, (err, video_id) => {
-    if (err) throw new Error(err);
+    if (err) return callback(err);
     
     record.video_id = video_id;
     ranking_array.push(record);
     
-    console.log('i:', i, 'ranking_dom.length:', ranking_dom.length);
-    if (i === ranking_dom.length - 1) {
+    console.log('loop_count:', loop_count);
+    if (loop_count === ranking_dom.length - 1) {
       ranking_array.sort((a, b) => {
         if (Number(a['rank']) > Number(b['rank'])) return 1;
         else return -1;
       });
-      json['ranking'] = ranking_array;
+      
+      var json = {};
+      json.ranking = ranking_array;
       callback(null, json);
+    } else {
+      loop_count++;
+      serialVideoIDSearch(youtube_client, $, ranking_dom, loop_count, ranking_array, callback);
     }
   });
-}
- 
+};
+
 module.exports.handler = function(event, context, cb) {
   
   var youtube_client;
@@ -66,57 +59,36 @@ module.exports.handler = function(event, context, cb) {
     (callback) => {
       console.log('init youtube_client');
       youtube_client = new Youtube((err) => {
-        if (err) throw new Error(err);
-        callback(null);
+        callback(err);
       });
     },
     
     (callback) => {
       console.log('fetch html');
       cheerio_httpclient.fetch('http://www.billboard.com/charts/hot-100', (err, $) => {
-        if (err) throw new Error(err);
-        callback(null, $);
+        callback(err, $);
       });
     },
     
     ($, callback) => {
       console.log('get video ids');
       var date = $('.chart-data-header time').text();
-      var json = {};
-      json['date'] = date;
-      var ranking_array = [];
       var ranking_dom = $('.chart-row');
       
-      for (var i = 0; i < ranking_dom.length; i++) {
-        var record = parse_dom($, ranking_dom[i]);
-        youtube_client.search(record.artist + ' ' + record.title, (err, video_id) => {
-          if (err) throw new Error(err);
-          
-          record.video_id = video_id;
-          ranking_array.push(record);
-          
-          console.log('i:', i, 'ranking_dom.length:', ranking_dom.length);
-          if (i === ranking_dom.length - 1) {
-            ranking_array.sort((a, b) => {
-              if (Number(a['rank']) > Number(b['rank'])) return 1;
-              else return -1;
-            });
-            json['ranking'] = ranking_array;
-            callback(null, json);
-          }
-        });
-      }
+      serialVideoIDSearch(youtube_client, $, ranking_dom, 0, [], (err, json) => {
+        json['date'] = date;
+        callback(err, json);
+      });
     },
     
     (json, callback) => {
       console.log('put to s3');
-      s3_client.putObject(build_s3_param(json), (err, data) => {
-        console.log('data:', data);
+      s3_client.putObject(Aws.buildS3Param(json), (err, data) => {
         callback(err);
       });
     }
   ], (err) => {
-    // if (err) throw new Error(err);
+    if (err) return cb(JSON.stringify(err));
     cb(null, 'update ranking json success!!');
   });
 };
