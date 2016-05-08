@@ -14,7 +14,7 @@
   "endpoints": [],
   "events": [
     {
-      "name": "every saturday",
+      "name": "scrape-every-saturday",
       "type": "schedule",
       "config": {
         "schedule": "cron(0 0 ? * SAT *)",

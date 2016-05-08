@@ -14,10 +14,10 @@
   "endpoints": [],
   "events": [
     {
-      "name": "every saturday",
+      "name": "upload-every-saturday",
       "type": "schedule",
       "config": {
-        "schedule": "cron(0 0 ? * SAT *)",
+        "schedule": "cron(0 1 ? * SAT *)",
         "enabled": true
       }
     }
