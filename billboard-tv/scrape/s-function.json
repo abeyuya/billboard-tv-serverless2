@@ -17,7 +17,8 @@
       "name": "every saturday",
       "type": "schedule",
       "config": {
-        "schedule": "cron(0 0 ? * SAT *)"
+        "schedule": "cron(0 0 ? * SAT *)",
+        "enabled": true
       }
     }
   ],

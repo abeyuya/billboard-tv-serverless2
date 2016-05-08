@@ -14,10 +14,11 @@
   "endpoints": [],
   "events": [
     {
-      "name": "mySchedule",
+      "name": "every saturday",
       "type": "schedule",
       "config": {
-        "schedule": "rate(5 minutes)"
+        "schedule": "cron(0 0 ? * SAT *)",
+        "enabled": true
       }
     }
   ],
