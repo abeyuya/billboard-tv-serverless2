@@ -8,7 +8,18 @@ AWS.config.update({
 });
 
 module.exports = class Aws {
+  
   static s3(){
     return new AWS.S3();
+  }
+  
+  static buildS3Param(json){
+    return {
+      'Bucket': 'billboard-tv.tk',
+      'Key': 'ranking.json',
+      'ACL': 'public-read',
+      'Body': JSON.stringify(json),
+      ContentType: 'application/json'
+    };
   }
 }

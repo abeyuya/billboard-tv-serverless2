@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.0.0-rc.4",
     "aws-sdk": "^2.3.9",
     "cheerio-httpcli": "^0.6.8",
     "googleapis": "^5.2.1",
